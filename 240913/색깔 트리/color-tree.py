@@ -86,27 +86,27 @@ def check_color(m_id):
 # 점수 조회
 def check_score():
     def dfs(node):
-
-        _, color, _ = nodes[node]
-        # 자식 서브 트리들과 색상이 다른 갯수 확인 (X)
-        # 집합에 고유한 색상을 저장 (중복없이 저장)
+        _, color, _ = nodes[node]  # 현재 노드의 색상 가져오기
+        # 현재 노드의 색상을 집합에 추가 (중복되지 않게)
         unique_colors = set([color])
+        
+        # 자식 노드들을 재귀적으로 탐색
         for child in children.get(node, []):
-            # unique_colors.append(dfs(child)) 집합은 update
+            # 자식 노드에서 반환된 색상 집합을 현재 색상 집합에 추가
             unique_colors.update(dfs(child))
-
+        
         return unique_colors
 
     total_score = 0
 
-    for node in nodes:
-        unique_colors = dfs(node)
-        total_score += len(unique_colors) ** 2
+    # 루트 노드에서만 DFS를 시작 (p_id가 -1인 노드들)
+    for node, (p_id, _, _) in nodes.items():
+        if p_id == -1:  # 루트 노드인 경우에만 DFS 시작
+            unique_colors = dfs(node)
+            total_score += len(unique_colors) ** 2  # 고유 색상의 개수의 제곱을 점수에 추가
 
-
-    # 거듭제곱 계산
+    # 최종 점수 출력
     print(total_score)
-
 
 
 
