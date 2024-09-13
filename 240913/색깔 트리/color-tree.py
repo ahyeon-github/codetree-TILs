@@ -32,7 +32,7 @@ def add_node(m_id, p_id, color, max_depth):
         # max_depth 딕셔너리에서 m_id 에 해당하는 Max_depath를 가져온다.
 
         # if max_depths[p_id] >= max_depth:
-        if p_id in max_depths and max_depths[p_id] >= max_depth:
+        if p_id in max_depths and max_depths[p_id] > 1:
             # if max_depth{p_id} >= max_depth{m_id} :
             nodes[m_id] = (p_id, color, max_depth)
             # 자식최대 깊이 저장
@@ -43,11 +43,21 @@ def add_node(m_id, p_id, color, max_depth):
             else:
                 children[p_id] = [m_id]
 
+
+            children[m_id] = []
+        else:
+            print(f"Cannot add node {m_id}: exceeds parent {p_id}'s max depth")
+
+
+
             # if p_max_depth >= max_depth:
             # node = {m_id: (p_id, color, max_depth)}
             # 리스트로 저장
             # 부모 노드의 자식리스트에 해당 트리를 추가
             # children.append  # {p_id : [자식 노드의 리스트]}
+
+            # 새로운 자식 노드의 자식 리스트를 초기화
+            # children[m_id] = []
 
 
         # else:
@@ -86,27 +96,27 @@ def check_color(m_id):
 # 점수 조회
 def check_score():
     def dfs(node):
-        _, color, _ = nodes[node]  # 현재 노드의 색상 가져오기
-        # 현재 노드의 색상을 집합에 추가 (중복되지 않게)
+
+        _, color, _ = nodes[node]
+        # 자식 서브 트리들과 색상이 다른 갯수 확인 (X)
+        # 집합에 고유한 색상을 저장 (중복없이 저장)
         unique_colors = set([color])
-        
-        # 자식 노드들을 재귀적으로 탐색
         for child in children.get(node, []):
-            # 자식 노드에서 반환된 색상 집합을 현재 색상 집합에 추가
+            # unique_colors.append(dfs(child)) 집합은 update
             unique_colors.update(dfs(child))
-        
+
         return unique_colors
 
     total_score = 0
 
-    # 루트 노드에서만 DFS를 시작 (p_id가 -1인 노드들)
-    for node, (p_id, _, _) in nodes.items():
-        if p_id == -1:  # 루트 노드인 경우에만 DFS 시작
-            unique_colors = dfs(node)
-            total_score += len(unique_colors) ** 2  # 고유 색상의 개수의 제곱을 점수에 추가
+    for node in nodes:
+        unique_colors = dfs(node)
+        total_score += len(unique_colors) ** 2
 
-    # 최종 점수 출력
+
+    # 거듭제곱 계산
     print(total_score)
+
 
 
 
