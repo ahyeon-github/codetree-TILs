@@ -45,8 +45,8 @@ def add_node(m_id, p_id, color, max_depth):
 
 
             children[m_id] = []
-        else:
-            print(f"Cannot add node {m_id}: exceeds parent {p_id}'s max depth")
+        # else:
+        #     print(f"Cannot add node {m_id}: exceeds parent {p_id}'s max depth")
 
 
 
