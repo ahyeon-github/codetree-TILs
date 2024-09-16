@@ -31,7 +31,6 @@ def add_node(m_id, p_id, color, max_depth):
             children[m_id] = []
             # 부모 노드의 최대 깊이 갱신
             update_depth(p_id, max_depth + 1)
-        # 부모의 깊이를 초과하면 아무 동작도 하지 않음
 
 # 색상 변경
 def change_color(m_id, new_color):
@@ -53,13 +52,15 @@ def check_score():
     # 해당 노드의 서브트리 내 고유 색상 수를 계산하는 DFS 함수
     def dfs(node):
         _, color, _ = nodes[node]
-        unique_colors = set([color])
+        unique_colors = set([color])  # 현재 노드의 색상을 추가
         for child in children.get(node, []):
+            # 자식 노드의 색상들을 서브트리로부터 받아와서 합침
             unique_colors.update(dfs(child))
         return unique_colors
 
     total_score = 0
     for node in nodes:
+        # 각 노드마다 고유 색상 수 계산
         unique_colors = dfs(node)
         total_score += len(unique_colors) ** 2
     print(total_score)
