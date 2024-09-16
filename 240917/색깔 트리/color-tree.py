@@ -1,15 +1,16 @@
+# 노드 정보 저장
 nodes = {}  # {m_id : (p_id, color, max_depth)}
 children = {}  # {p_id : [자식 노드의 리스트]}
 max_depths = {}  # {m_id : max_depth}
 
-# 부모 노드의 최대 깊이를 갱신하는 함수
+
+# 부모 노드의 최대 깊이를 재귀적으로 갱신하는 함수
 def update_depth(m_id, depth):
-    # 현재 노드의 최대 깊이를 업데이트
-    max_depths[m_id] = max(max_depths[m_id], depth)
-    # 부모 노드가 존재하면 재귀적으로 부모 노드의 깊이를 갱신
-    p_id, _, _ = nodes[m_id]
-    if p_id != -1:  # 부모가 루트가 아니라면
-        update_depth(p_id, depth + 1)
+    if max_depths[m_id] < depth:
+        max_depths[m_id] = depth
+        p_id, _, _ = nodes[m_id]
+        if p_id != -1:
+            update_depth(p_id, depth + 1)
 
 # 새로운 노드 추가
 def add_node(m_id, p_id, color, max_depth):
@@ -19,8 +20,8 @@ def add_node(m_id, p_id, color, max_depth):
         max_depths[m_id] = max_depth
         children[m_id] = []
     else:
-        # 부모 노드의 max_depth보다 큰 max_depth를 가지면 추가 불가
-        if max_depths[p_id] > 1:  # 부모의 깊이가 적절해야 함
+        # 부모 노드의 max_depth와 비교하여 추가할 수 있는지 확인
+        if max_depths[p_id] >= max_depth:
             nodes[m_id] = (p_id, color, max_depth)
             max_depths[m_id] = max_depth
             if p_id in children:
@@ -28,13 +29,13 @@ def add_node(m_id, p_id, color, max_depth):
             else:
                 children[p_id] = [m_id]
             children[m_id] = []
-            # 부모 노드의 최대 깊이를 재귀적으로 갱신
-            update_depth(p_id, 2)
-        # else:
-        #     print(f"Cannot add node {m_id}: exceeds parent {p_id}'s max depth")
+            # 부모 노드의 최대 깊이 갱신
+            update_depth(p_id, max_depth + 1)
+        # 부모의 깊이를 초과하면 아무 동작도 하지 않음
 
 # 색상 변경
 def change_color(m_id, new_color):
+    # 해당 노드를 루트로 하는 서브트리 내 모든 노드의 색상을 변경
     def dfs(node):
         p_id, _, max_depth = nodes[node]
         nodes[node] = (p_id, new_color, max_depth)
@@ -49,6 +50,7 @@ def check_color(m_id):
 
 # 점수 조회
 def check_score():
+    # 해당 노드의 서브트리 내 고유 색상 수를 계산하는 DFS 함수
     def dfs(node):
         _, color, _ = nodes[node]
         unique_colors = set([color])
