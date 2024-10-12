@@ -59,8 +59,14 @@ def push_unit(start, dr): # start를 dr 방향으로 밀고, 연쇄적으로 처
                 continue # 이미 움직일 대상 pset이라면 체크할 필요 없음
 
             ti,tj, th, tw, tk = units[idx]
-            # 겹치는 경우 (and)
-            if ni <= ti+th-1 and ni+h-1 >= ti and tj <= nj+w-1 and tj+tw-1 >= nj :
+            # # 겹치는 경우 (and)
+            # if ni <= ti+th-1 and ni+h-1 >= ti and tj <= nj+w-1 and tj+tw-1 >= nj :
+            #     q.append(idx)
+            #     pset.add(idx)
+            # 겹치지 않은 경우 (or)
+            if ni  > ti + th-1 or ni+h-1 <ti or nj+w-1 < tj or nj > tj+tw-1 :
+                pass
+            else :
                 q.append(idx)
                 pset.add(idx)
 
