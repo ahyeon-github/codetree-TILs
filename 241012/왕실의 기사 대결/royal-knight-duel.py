@@ -1,16 +1,14 @@
+import sys
+sys.stdin=open("input.txt", "r")
 # 방향  상 우 하 좌
 di  = [-1, 0, 1, 0]
 dj = [0, 1, 0 , -1]
 
-
 N, M , Q = map (int, input().split())
-
-arr = [[2]*(N+2)] + [[2]+list(map(int, input().split()))+ [2] for _ in range (N) ]
+arr = [[2]*(N+2)] + [[2]+list(map(int, input().split()))+ [2] for _ in range (N) ] + [[2]*(N+2)]
 units ={}
-
 #init_k = [0] * M
 init_k =[0] * (M+1)
-
 for m in range(1, M+1):
     si, sj , h, w, k  = map(int, input().split())
     # 1번 기사에 대한 정보를 딕셔너리로 저장
@@ -76,7 +74,7 @@ def push_unit(start, dr): # start를 dr 방향으로 밀고, 연쇄적으로 처
     # 이동하는 것
     for idx in pset:
         si, sj, h, w, k = units[idx]
-        
+
         if k <= damage[idx] : # 체력보다 더 큰 데이미지를 받으면 삭제 처리
             units.pop(idx)
         else:
@@ -89,11 +87,6 @@ for _ in range(Q):
     # 인덱스가 존재하는가?  사라질수도 있음 데미지가 0 이하 라면
     if idx in units:
         push_unit(idx, dr) # 명령받은 기사 번호, 방향을 바탕으로 연쇄적으로 밀기 (벽이 없는 경우)
-
-
-
-
-
 ans = 0
 # 초기 체력 init_k - units 에 있는 체력
 # unit idx값을 하나씩 빼내서
