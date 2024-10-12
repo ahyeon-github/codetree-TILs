@@ -1,6 +1,3 @@
-import sys
-sys.stdin=open("input.txt", "r")
-# 방향  상 우 하 좌
 di  = [-1, 0, 1, 0]
 dj = [0, 1, 0 , -1]
 
